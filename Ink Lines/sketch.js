@@ -16,10 +16,6 @@ function setup() {
   splatter(20000);
 }
 
-function draw() {
-  // put drawing code here
-}
-
 function splatter(splatters) {
 
   for (let i = 0; i < splatters; i++) {
