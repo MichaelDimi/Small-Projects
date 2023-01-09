@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess</title>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <link rel="stylesheet" href="/css/game.css">
+    <script>
+        let canvas;
+    </script>
+    <script src="/js/constants.js"></script>
+    <script src="/js/board.js"></script>
+    <script src="/js/pieces/piece.js"></script>
+    <script src="/js/pieces/pawn.js"></script>
+    <script src="/js/pieces/rook.js"></script>
+    <script src="/js/pieces/knight.js"></script>
+    <script src="/js/pieces/bishop.js"></script>
+    <script src="/js/pieces/queen.js"></script>
+    <script src="/js/pieces/king.js"></script>
+    <script src="/js/loop.js"></script>
+    <script src="/js/events.js"></script>
+</head>
+<body onload="start()">
+    <div class="board-border">
+        <div id="board-container">
+            <div id="selector"></div>
+        </div>
+    </div>
+</body>
+<script>
+    // Override keycodes
+    document.body.addEventListener('keydown', (event) => {
+        // keyCode 83 corresponds to the "s" key, meta corresponds to ⌘
+        // if(event.keyCode==32) {
+        //     clearDots();
+        // }
+    });
+</script>
+</html>
