@@ -56,6 +56,12 @@ void draw() {
       PVector c = new PVector(x + rez * (1 - f2 / (f2 - f3)), y + rez  );
       PVector d = new PVector(x        , y + rez * (1 - f3 / (f3 - f0)));
       
+      // Where to draw the lines
+      //PVector a = new PVector(x + rez * f0, y        );
+      //PVector b = new PVector(x + rez  , y + rez * f1);
+      //PVector c = new PVector(x + rez * f2, y + rez  );
+      //PVector d = new PVector(x        , y + rez * f3);
+      
       int state = getState(ceil(field[i][j]), ceil(field[i+1][j]), ceil(field[i+1][j+1]), ceil(field[i][j+1]));
       strokeWeight(2);
       stroke(0, 255, 0);
