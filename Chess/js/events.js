@@ -24,6 +24,7 @@ function onMouseDown(e) {
     let pieceElement;
     for (const piece of board.black) {
         if (piece.posX == scaledPos.x && piece.posY == scaledPos.y) {
+            if (turn != Side.black) { break }
             console.log(piece);
             selectedPiece = piece;
 
@@ -34,6 +35,7 @@ function onMouseDown(e) {
     }
     for (const piece of board.white) {
         if (piece.posX == scaledPos.x && piece.posY == scaledPos.y) {
+            if (turn != Side.white) { break }
             console.log(piece);
             selectedPiece = piece;
             
@@ -114,34 +116,38 @@ function dropPiece() {
     let scaledPos = {x: Math.abs(Math.round((canvasPos.x - size/2) / size)), y: Math.abs(Math.round((canvasPos.y - size/2) / size))};
 
     let pieces = board.white.concat(board.black);
-    let shouldUpdate = true;
-    for (const piece of pieces) {
-        if (piece.side == selectedPiece.side) {
-            if (piece.posX == scaledPos.x && piece.posY == scaledPos.y) {
-                // Move back (overlap your piece)
-                shouldUpdate = false;
-                break;
-            }
-        } else {
-            if (piece.posX == scaledPos.x && piece.posY == scaledPos.y) {
-                // Take the piece
-                let takenPiece = document.getElementById(piece.id);
-                takenPiece.style.display = "none";
-                if (piece.side == Side.white) {
-                    board.white.splice(board.white.indexOf(piece), 1);
-                } else {
-                    board.black.splice(board.black.indexOf(piece), 1);
+    let shouldUpdate = false;
+    // If not a valid one of your moves
+    for (const move of selectedPiece.moves) {
+        if (move.x == scaledPos.x && move.y == scaledPos.y) {
+            shouldUpdate = true;
+        }
+    }
+    if (shouldUpdate == true) {
+        // Is the piece one of your own or other side
+        for (const piece of pieces) {
+            if (piece.side == selectedPiece.side) {
+                if (piece.posX == scaledPos.x && piece.posY == scaledPos.y) {
+                    // Move back (overlap your piece)
+                    shouldUpdate = false;
+                    break;
                 }
-                break;
+            } else {
+                if (piece.posX == scaledPos.x && piece.posY == scaledPos.y) {
+                    // Take the piece
+                    takePiece(piece);
+                    break;
+                }
             }
         }
     }
+    
     if (shouldUpdate) {
         selectedPiece.posX = scaledPos.x;
         selectedPiece.posY = scaledPos.y;
-
-        clearDots();
+        turn = (turn == Side.black) ? Side.white : Side.black;
     }
+    clearDots();
 
     pieceElement.style.left = selectedPiece.posX*12.5 + "%";
     pieceElement.style.top = selectedPiece.posY*12.5 + "%";
@@ -149,7 +155,6 @@ function dropPiece() {
     selectedPiece = null;
 }
 
-// TODO: Fix this
 function clearDots() {
     let dots = document.querySelectorAll("#board-container .dot")
     

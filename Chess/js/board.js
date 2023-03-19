@@ -73,6 +73,16 @@ var board = {
     }
 }
 
+function takePiece(piece) {
+    let takenPiece = document.getElementById(piece.id);
+    takenPiece.style.display = "none";
+    if (piece.side == Side.white) {
+        board.white.splice(board.white.indexOf(piece), 1);
+    } else {
+        board.black.splice(board.black.indexOf(piece), 1);
+    }
+}
+
 const Side = {
     white: "white",
     black: "black"

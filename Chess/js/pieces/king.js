@@ -28,25 +28,31 @@ class King extends Piece {
         boardContainer.appendChild(container);
     }
 
+
+    // TODO: Check and Rookada
     calculateMoves() {
         let pieces = board.white.concat(board.black);
 
         this.moves = [];
 
-        this.moves.push({x: this.posX - 1, y: this.posY - 1});
-        this.moves.push({x: this.posX, y: this.posY - 1});
-        this.moves.push({x: this.posX + 1, y: this.posY - 1});
-        this.moves.push({x: this.posX + 1, y: this.posY});
-        this.moves.push({x: this.posX + 1, y: this.posY + 1});
-        this.moves.push({x: this.posX, y: this.posY + 1});
-        this.moves.push({x: this.posX - 1, y: this.posY + 1});
-        this.moves.push({x: this.posX - 1, y: this.posY});
+        this.moves.push({x: this.posX - 1, y: this.posY - 1, take: false});
+        this.moves.push({x: this.posX    , y: this.posY - 1, take: false});
+        this.moves.push({x: this.posX + 1, y: this.posY - 1, take: false});
+        this.moves.push({x: this.posX + 1, y: this.posY    , take: false});
+        this.moves.push({x: this.posX + 1, y: this.posY + 1, take: false});
+        this.moves.push({x: this.posX    , y: this.posY + 1, take: false});
+        this.moves.push({x: this.posX - 1, y: this.posY + 1, take: false});
+        this.moves.push({x: this.posX - 1, y: this.posY    , take: false});
 
         for (const piece of pieces) {
             if (this == piece) continue;
 
             for (const move of this.moves) {
                 if (move.x == piece.posX && move.y == piece.posY) {
+                    if (piece.side != this.side) {
+                        move.take = true;
+                        continue;
+                    }
                     this.moves.splice(this.moves.indexOf(move), 1);
                     continue;
                 }
@@ -57,9 +63,6 @@ class King extends Piece {
                 }
             }
         }
-
-        this.moves.push({x: this.posX, y: this.posY}); // Always include initial pos (unless check...)
         
-        console.log(this.moves);
     }
 }

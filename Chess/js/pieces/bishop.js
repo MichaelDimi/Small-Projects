@@ -27,4 +27,13 @@ class Bishop extends Piece {
         let boardContainer = document.getElementById("board-container");
         boardContainer.appendChild(container);
     }
+
+    calculateMoves() {
+        this.moves = [];
+
+        this.checkNextPiece({ x: this.posX, y: this.posY }, Direction.north_west);
+        this.checkNextPiece({ x: this.posX, y: this.posY }, Direction.north_east);
+        this.checkNextPiece({ x: this.posX, y: this.posY }, Direction.south_west);
+        this.checkNextPiece({ x: this.posX, y: this.posY }, Direction.south_east);
+    }
 }

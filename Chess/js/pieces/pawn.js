@@ -1,6 +1,7 @@
 class Pawn extends Piece {
     constructor(posX, posY, side) {
         super(posX, posY, side);
+        this.originalPos = { x: posX, y: 8 - posY };
     }
 
     draw(color) {
@@ -26,5 +27,39 @@ class Pawn extends Piece {
         // Append
         let boardContainer = document.getElementById("board-container");
         boardContainer.appendChild(container);
+    }
+
+    // TODO: TAKING DIAGONALLY
+    calculateMoves() {
+        let pieces = (this.side == Side.white) ? board.white : board.black;
+
+        this.moves = [];
+        let offset;
+        if (this.side == Side.black) {
+            offset = 1;
+        } else {
+            offset = -1;
+        }
+
+        this.moves.push({ x: this.posX, y: this.posY + offset });
+        if (this.posX == this.originalPos.x && this.posY == this.originalPos.y) {
+            this.moves.push({ x: this.posX, y: this.posY + 2*offset });
+        }
+        for (const piece of pieces) {
+            if (this == piece) continue;
+
+            for (const move of this.moves) {
+                if (move.x == piece.posX && move.y == piece.posY) {
+                    let index = this.moves.indexOf(move)
+                    this.moves.splice(index, this.moves.length - index);
+                    continue;
+                }
+
+                if (move.y > 7 || move.y < 0) {
+                    this.moves.splice(this.moves.indexOf(move), 1);
+                    continue;
+                }
+            }
+        }
     }
 }

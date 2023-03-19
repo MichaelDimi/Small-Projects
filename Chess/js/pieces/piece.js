@@ -33,6 +33,8 @@ class Piece {
 
     drawMoves() {
         for (const move of this.moves) {
+            if (move.take) { continue }
+
             let dot = document.createElement('div');
             dot.setAttribute('class', 'dot');
 
@@ -42,5 +44,24 @@ class Piece {
             let boardContainer = document.getElementById("board-container");
             boardContainer.appendChild(dot);
         }
+    }
+
+    // Only used for recursive pieces
+    checkNextPiece(currentPos, direction) {
+        let pieces = board.white.concat(board.black);
+
+        let newPos = { x: currentPos.x + direction.x, y: currentPos.y + direction.y, take: false };
+        for (const piece of pieces) {
+            if (newPos.x == piece.posX && newPos.y == piece.posY) {
+                if (piece.side != this.side) {
+                    newPos.take = true;
+                    this.moves.push(newPos);
+                }
+                return;
+            }
+        }
+        if (newPos.x > 7 || newPos.x < 0 || newPos.y > 7 || newPos.y < 0) { return }
+        this.moves.push(newPos);
+        this.checkNextPiece(newPos, direction);
     }
 }

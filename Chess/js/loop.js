@@ -1,5 +1,7 @@
 canvas = board.canvas
 
+let turn;
+
 function start() {
     board.create();
 
@@ -13,6 +15,8 @@ function start() {
     for (const piece of board.black) {
         piece.draw(BLACK_PIECE);
     }
+
+    turn = Side.white;
     
     requestAnimationFrame( loop );
 }

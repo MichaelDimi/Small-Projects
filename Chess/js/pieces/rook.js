@@ -27,4 +27,13 @@ class Rook extends Piece {
         let boardContainer = document.getElementById("board-container");
         boardContainer.appendChild(container);
     }
+
+    calculateMoves() {
+        this.moves = [];
+
+        this.checkNextPiece({ x: this.posX, y: this.posY }, Direction.north);
+        this.checkNextPiece({ x: this.posX, y: this.posY }, Direction.south);
+        this.checkNextPiece({ x: this.posX, y: this.posY }, Direction.east);
+        this.checkNextPiece({ x: this.posX, y: this.posY }, Direction.west);
+    }
 }
