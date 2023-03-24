@@ -72,7 +72,5 @@ class Pawn extends Piece {
         }
     }
 
-    isInOriginalPos() {
-        return this.posX == this.originalPos.x && this.posY == this.originalPos.y
-    }
+    // TODO: Promotion
 }

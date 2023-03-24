@@ -1,7 +1,6 @@
 class King extends Piece {
     constructor(posX, posY, side) {
         super(posX, posY, side);
-        this.isInCheck = false;
     }
 
     draw(color) {
@@ -29,7 +28,6 @@ class King extends Piece {
         boardContainer.appendChild(container);
     }
 
-    // TODO: Rookada
     findControllingSquares() {
         let pieces = board.white.concat(board.black);
 
@@ -56,6 +54,69 @@ class King extends Piece {
                         continue;
                     }
                     this.remove(move);
+                }
+            }
+        }
+
+        // TODO: Can't castle out of check
+        // Check Rokada
+        if (!this.hasMoved) { // Wrong Check (Should check if it hasn't moved)
+            let oppPieces = board.getPieces(this.oppSide);
+            let rooks = board.findPieces(Rook, this.side);
+            for (const rook of rooks) {
+                if (!rook.hasMoved) {
+                    if (rook.posX < this.posX) {
+                        // Queen Side
+                        let canQueenSide = true;
+                        for (let i = 1; i <= 3; i++) {
+                            for (const piece of pieces) {
+                                if (piece.posX == i && piece.posY == this.posY) {
+                                    canQueenSide = false;
+                                }
+                            }
+                            // Check if the move puts you in check
+                            if (canQueenSide) {
+                                let backupPos = this.posX;
+                                this.posX = i;
+
+                                if (this.isCheck(oppPieces)) {
+                                    canQueenSide = false;
+                                }
+
+                                this.posX = backupPos;
+                            }
+                        }
+
+                        if (canQueenSide) {
+                            this.moves.push({ x: 2, y: this.posY, rokada: true, queenSide: true });
+                        }
+                    } else {
+                        // King Side
+                        let canKingSide = true;
+                        for (let i = 5; i <= 6; i++) {
+                            for (const piece of pieces) {
+                                if (piece.posX == i && piece.posY == this.posY) {
+                                    canKingSide = false;
+                                }
+                            }
+
+                            // Check if the move puts you in check
+                            if (canKingSide) {
+                                let backupPos = this.posX;
+                                this.posX = i;
+
+                                let oppPieces = board.getPieces(this.oppSide);
+                                if (this.isCheck(oppPieces)) {
+                                    canKingSide = false;
+                                }
+
+                                this.posX = backupPos;
+                            }
+                        }
+                        if (canKingSide) {
+                            this.moves.push({ x: 6, y: this.posY, rokada: true, kingSide: true });
+                        }
+                    }
                 }
             }
         }

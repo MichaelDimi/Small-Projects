@@ -12,6 +12,7 @@ class Piece {
         this.oppSide = side == Side.white ? Side.black : Side.white;
 
         this.moves = [];
+        this.hasMoved = false;
     }
 
     draw() {
@@ -96,9 +97,7 @@ class Piece {
             }
 
             let king = board.findPiece(King, this.side);
-            if (king.isCheck(oppPieces)) {
-                console.log("ILLEGAL MOVE", move);
-            } else {
+            if (!king.isCheck(oppPieces)) {
                 legalMoves.push(move);
             }
 
@@ -108,5 +107,9 @@ class Piece {
         }
 
         this.moves = legalMoves;
+    }
+
+    isInOriginalPos() {
+        return this.posX == this.originalPos.x && this.posY == this.originalPos.y
     }
 }

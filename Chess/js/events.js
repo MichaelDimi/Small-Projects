@@ -130,29 +130,48 @@ function dropPiece() {
 
     if (shouldUpdate == true) {
         // Is the piece one of your own or other side
-        for (const piece of pieces) {
-            if (piece.side == selectedPiece.side) {
-                if (piece.posX == scaledPos.x && piece.posY == scaledPos.y) {
-                    // Move back (overlap your piece)
-                    shouldUpdate = false;
-                    break;
-                }
-            } else {
-                if (selectedMove.enPassant) {
-                    if (piece.posX == selectedMove.x && 
-                        piece.posY == selectedMove.y - selectedPiece.offset) {
+        if (!selectedMove.rokada) {
+            for (const piece of pieces) {
+                if (piece.side == selectedPiece.side) {
+                    if (piece.posX == scaledPos.x && piece.posY == scaledPos.y) {
+                        // Move back (overlap your piece)
+                        shouldUpdate = false;
+                        break;
+                    }
+                } else {
+                    if (selectedMove.enPassant) {
+                        if (piece.posX == selectedMove.x && 
+                            piece.posY == selectedMove.y - selectedPiece.offset) {
+
                             takePiece(piece);
                             break;
                         }
-                } else if (piece.posX == scaledPos.x && piece.posY == scaledPos.y) {
-                    takePiece(piece);
-                    break;
+                    } else if (piece.posX == scaledPos.x && piece.posY == scaledPos.y) {
+                        takePiece(piece);
+                        break;
+                    }
                 }
             }
+        } else {
+            let rook;
+            if (selectedMove.queenSide) {
+                rook = board.findPieces(Rook, selectedPiece.side).find(r => r.posX == 0);
+                rook.posX = selectedMove.x + 1;
+            } else {
+                rook = board.findPieces(Rook, selectedPiece.side).find(r => r.posX == 7);
+                rook.posX = selectedMove.x - 1;
+            }
+
+            let rookElement = document.getElementById(rook.id);
+            rookElement.style.transition = "250ms";
+            rookElement.style.left = rook.posX*12.5 + "%";
+            rookElement.style.top = rook.posY*12.5 + "%";
+            rookElement.style.transition = "0";
         }
     }
     
     if (shouldUpdate) {
+        selectedPiece.hasMoved = true;
 
         // Update valid EnPassant piece
         if (selectedMove.twoSquareAdvance) {
@@ -168,11 +187,14 @@ function dropPiece() {
         selectedPiece.calculateLegalMoves();
 
         turn = (turn == Side.black) ? Side.white : Side.black;
+
+        pieceElement.style.transition = "250ms";
     }
     clearDots();
 
     pieceElement.style.left = selectedPiece.posX*12.5 + "%";
     pieceElement.style.top = selectedPiece.posY*12.5 + "%";
+    pieceElement.style.transition = "0ms";
 
     selectedPiece = null;
 }

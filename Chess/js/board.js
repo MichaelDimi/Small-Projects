@@ -17,38 +17,38 @@ var board = {
     },
     initPieces: function() {
         { // White Pieces
-            for (let i=0; i<COLS; i++) {
-                let pawn = new Pawn(i, 2, Side.white);
-                board.white.push(pawn);
-            }
+            // for (let i=0; i<COLS; i++) {
+            //     let pawn = new Pawn(i, 2, Side.white);
+            //     board.white.push(pawn);
+            // }
 
             let rookA = new Rook(0, 1, Side.white);
             let rookH = new Rook(7, 1, Side.white);
             board.white.push(rookA);
             board.white.push(rookH);
 
-            let knightB = new Knight(1, 1, Side.white);
-            let knightE = new Knight(6, 1, Side.white);
-            board.white.push(knightB);
-            board.white.push(knightE);
+            // let knightB = new Knight(1, 1, Side.white);
+            // let knightE = new Knight(6, 1, Side.white);
+            // board.white.push(knightB);
+            // board.white.push(knightE);
 
-            let bishopC = new Bishop(2, 1, Side.white);
-            let bishopF = new Bishop(5, 1, Side.white);
-            board.white.push(bishopC);
-            board.white.push(bishopF);
+            // let bishopC = new Bishop(2, 1, Side.white);
+            // let bishopF = new Bishop(5, 1, Side.white);
+            // board.white.push(bishopC);
+            // board.white.push(bishopF);
 
-            let queen = new Queen(3, 1, Side.white);
-            board.white.push(queen);
+            // let queen = new Queen(3, 1, Side.white);
+            // board.white.push(queen);
 
             let king = new King(4, 1, Side.white);
             board.white.push(king);
         }
         
         { // Black Pieces
-            for (let i=0; i<COLS; i++) {
-                let pawn = new Pawn(i, 7, Side.black);
-                board.black.push(pawn);
-            }
+            // for (let i=0; i<COLS; i++) {
+            //     let pawn = new Pawn(i, 7, Side.black);
+            //     board.black.push(pawn);
+            // }
 
             let rookA = new Rook(0, 8, Side.black);
             let rookH = new Rook(7, 8, Side.black);
@@ -81,6 +81,17 @@ var board = {
             }
         }
         return null;
+    },
+    findPieces(Type, side) {
+        let pieces = side == Side.white ? board.white : board.black;
+        let foundPieces = [];
+
+        for (const piece of pieces) {
+            if (piece instanceof Type) {
+                foundPieces.push(piece);
+            }
+        }
+        return foundPieces;
     },
     getPieces(side) {
         return side == Side.white ? board.white : board.black
