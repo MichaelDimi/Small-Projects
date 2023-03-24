@@ -1,6 +1,7 @@
 class King extends Piece {
     constructor(posX, posY, side) {
         super(posX, posY, side);
+        this.isInCheck = false;
     }
 
     draw(color) {
@@ -28,9 +29,8 @@ class King extends Piece {
         boardContainer.appendChild(container);
     }
 
-
-    // TODO: Check and Rookada
-    calculateMoves() {
+    // TODO: Rookada
+    findControllingSquares() {
         let pieces = board.white.concat(board.black);
 
         this.moves = [];
@@ -48,21 +48,32 @@ class King extends Piece {
             if (this == piece) continue;
 
             for (const move of this.moves) {
+                if (this.isOutOfBounds(move)) { this.remove(move) }
+
                 if (move.x == piece.posX && move.y == piece.posY) {
                     if (piece.side != this.side) {
                         move.take = true;
                         continue;
                     }
-                    this.moves.splice(this.moves.indexOf(move), 1);
-                    continue;
-                }
-
-                if (move.x > 7 || move.x < 0 || move.y > 7 || move.y < 0) {
-                    this.moves.splice(this.moves.indexOf(move), 1);
-                    continue;
+                    this.remove(move);
                 }
             }
         }
-        
+    }
+
+    isCheck(oppPieces) {
+        let oppMoves = [];
+        for (const piece of oppPieces) {
+            piece.findControllingSquares();
+            oppMoves = oppMoves.concat(piece.moves);
+        }
+
+        for (const move of oppMoves) {
+            if (move.x == this.posX && move.y == this.posY) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

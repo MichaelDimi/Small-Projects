@@ -28,7 +28,7 @@ class Knight extends Piece {
         boardContainer.appendChild(container);
     }
 
-    calculateMoves() {
+    findControllingSquares() {
         let pieces = board.white.concat(board.black);
 
         this.moves = [];
@@ -52,17 +52,12 @@ class Knight extends Piece {
                         move.take = true;
                         continue;
                     }
-                    this.moves.splice(this.moves.indexOf(move), 1);
+                    this.remove(move);
                     continue;
                 }
 
-                if (move.x > 7 || move.x < 0 || move.y > 7 || move.y < 0) {
-                    this.moves.splice(this.moves.indexOf(move), 1);
-                    continue;
-                }
+                if (this.isOutOfBounds(move)) { this.remove(move) }
             }
         }
-
-
     }
 }

@@ -2,6 +2,7 @@ var board = {
     canvas: document.createElement("div"),
     black: [],
     white: [],
+    validEnPassantPiece: null,
     create: function() {
         // Initializes context and inserts canvas into DOM
         document.getElementById("board-container").insertBefore(this.canvas, document.getElementById("board-container").childNodes[0]);
@@ -70,6 +71,19 @@ var board = {
             let king = new King(4, 8, Side.black);
             board.black.push(king);
         }
+    },
+    findPiece(Type, side) {
+        let pieces = side == Side.white ? board.white : board.black;
+
+        for (const piece of pieces) {
+            if (piece instanceof Type) {
+                return piece;
+            }
+        }
+        return null;
+    },
+    getPieces(side) {
+        return side == Side.white ? board.white : board.black
     }
 }
 

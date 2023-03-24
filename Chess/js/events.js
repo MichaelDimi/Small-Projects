@@ -57,7 +57,7 @@ function onMouseDown(e) {
         selector.style.top = pieceElement.style.top;
 
         // Show the pieces possible moves
-        selectedPiece.calculateMoves();
+        selectedPiece.calculateLegalMoves();
         // Draw the possible moves
         clearDots();
         selectedPiece.drawMoves();
@@ -109,6 +109,7 @@ function onMouseMove(e) {
 }
 
 function dropPiece() {
+    if (selectedPiece == null) { return }
     let pieceElement = document.getElementById(selectedPiece.id);
 
     let element = document.getElementsByClassName("piece")[0]
@@ -117,12 +118,16 @@ function dropPiece() {
 
     let pieces = board.white.concat(board.black);
     let shouldUpdate = false;
+    let selectedMove = null;
+
     // If not a valid one of your moves
     for (const move of selectedPiece.moves) {
         if (move.x == scaledPos.x && move.y == scaledPos.y) {
             shouldUpdate = true;
+            selectedMove = move;
         }
     }
+
     if (shouldUpdate == true) {
         // Is the piece one of your own or other side
         for (const piece of pieces) {
@@ -133,8 +138,13 @@ function dropPiece() {
                     break;
                 }
             } else {
-                if (piece.posX == scaledPos.x && piece.posY == scaledPos.y) {
-                    // Take the piece
+                if (selectedMove.enPassant) {
+                    if (piece.posX == selectedMove.x && 
+                        piece.posY == selectedMove.y - selectedPiece.offset) {
+                            takePiece(piece);
+                            break;
+                        }
+                } else if (piece.posX == scaledPos.x && piece.posY == scaledPos.y) {
                     takePiece(piece);
                     break;
                 }
@@ -143,8 +153,20 @@ function dropPiece() {
     }
     
     if (shouldUpdate) {
+
+        // Update valid EnPassant piece
+        if (selectedMove.twoSquareAdvance) {
+            board.validEnPassantPiece = selectedPiece;
+        } else {
+            board.validEnPassantPiece = null;
+        }
+
         selectedPiece.posX = scaledPos.x;
         selectedPiece.posY = scaledPos.y;
+
+        // Recompute the new position
+        selectedPiece.calculateLegalMoves();
+
         turn = (turn == Side.black) ? Side.white : Side.black;
     }
     clearDots();
@@ -156,7 +178,7 @@ function dropPiece() {
 }
 
 function clearDots() {
-    let dots = document.querySelectorAll("#board-container .dot")
+    let dots = document.querySelectorAll("#board-container .dot");
     
     for (const dot of dots) {
         dot.remove();

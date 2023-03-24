@@ -28,12 +28,14 @@ class Bishop extends Piece {
         boardContainer.appendChild(container);
     }
 
-    calculateMoves() {
+    findControllingSquares() {
         this.moves = [];
 
-        this.checkNextPiece({ x: this.posX, y: this.posY }, Direction.north_west);
-        this.checkNextPiece({ x: this.posX, y: this.posY }, Direction.north_east);
-        this.checkNextPiece({ x: this.posX, y: this.posY }, Direction.south_west);
-        this.checkNextPiece({ x: this.posX, y: this.posY }, Direction.south_east);
+        let pieces = board.white.concat(board.black);
+
+        this.checkNextPiece({ x: this.posX, y: this.posY }, Direction.north_west, pieces);
+        this.checkNextPiece({ x: this.posX, y: this.posY }, Direction.north_east, pieces);
+        this.checkNextPiece({ x: this.posX, y: this.posY }, Direction.south_west, pieces);
+        this.checkNextPiece({ x: this.posX, y: this.posY }, Direction.south_east, pieces);
     }
 }

@@ -2,6 +2,7 @@ class Pawn extends Piece {
     constructor(posX, posY, side) {
         super(posX, posY, side);
         this.originalPos = { x: posX, y: 8 - posY };
+        this.offset = this.side == Side.black ? 1 : -1;
     }
 
     draw(color) {
@@ -29,21 +30,14 @@ class Pawn extends Piece {
         boardContainer.appendChild(container);
     }
 
-    // TODO: TAKING DIAGONALLY
-    calculateMoves() {
-        let pieces = (this.side == Side.white) ? board.white : board.black;
+    findControllingSquares() {
+        let pieces = board.white.concat(board.black);
 
         this.moves = [];
-        let offset;
-        if (this.side == Side.black) {
-            offset = 1;
-        } else {
-            offset = -1;
-        }
 
-        this.moves.push({ x: this.posX, y: this.posY + offset });
-        if (this.posX == this.originalPos.x && this.posY == this.originalPos.y) {
-            this.moves.push({ x: this.posX, y: this.posY + 2*offset });
+        this.moves.push({ x: this.posX, y: this.posY + this.offset });
+        if (this.isInOriginalPos()) {
+            this.moves.push({ x: this.posX, y: this.posY + 2*this.offset, twoSquareAdvance: true });
         }
         for (const piece of pieces) {
             if (this == piece) continue;
@@ -55,11 +49,30 @@ class Pawn extends Piece {
                     continue;
                 }
 
-                if (move.y > 7 || move.y < 0) {
-                    this.moves.splice(this.moves.indexOf(move), 1);
-                    continue;
+                if (this.isOutOfBounds(move)) { this.remove(move) }
+            }
+
+            // Diagonal Taking and En Passant
+            if (piece.side != this.side) {
+                if (piece.posX == this.posX - 1 && piece.posY == this.posY + this.offset) {
+                    this.moves.push({ x: this.posX - 1, y: this.posY + this.offset, take: true });
+                } else if (piece.posX == this.posX + 1 && piece.posY == this.posY + this.offset) {
+                    this.moves.push({ x: this.posX + 1, y: this.posY + this.offset, take: true });
+                } else if ((piece.posX == this.posX - 1 || piece.posX == this.posX + 1) && 
+                            piece.posY == this.posY) {
+
+                    if (board.validEnPassantPiece == piece) {
+                        this.moves.push({   x: piece.posX, 
+                                            y: piece.posY + this.offset, 
+                                            enPassant: true 
+                                        });
+                    }
                 }
             }
         }
+    }
+
+    isInOriginalPos() {
+        return this.posX == this.originalPos.x && this.posY == this.originalPos.y
     }
 }

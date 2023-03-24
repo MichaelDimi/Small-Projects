@@ -17,17 +17,4 @@ function start() {
     }
 
     turn = Side.white;
-    
-    requestAnimationFrame( loop );
-}
-
-function loop() {
-
-    update();
-
-    requestAnimationFrame( loop );
-}
-
-function update() {
-
 }

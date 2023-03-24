@@ -28,12 +28,14 @@ class Rook extends Piece {
         boardContainer.appendChild(container);
     }
 
-    calculateMoves() {
+    findControllingSquares() {
         this.moves = [];
 
-        this.checkNextPiece({ x: this.posX, y: this.posY }, Direction.north);
-        this.checkNextPiece({ x: this.posX, y: this.posY }, Direction.south);
-        this.checkNextPiece({ x: this.posX, y: this.posY }, Direction.east);
-        this.checkNextPiece({ x: this.posX, y: this.posY }, Direction.west);
+        let pieces = board.white.concat(board.black);
+
+        this.checkNextPiece({ x: this.posX, y: this.posY }, Direction.north, pieces);
+        this.checkNextPiece({ x: this.posX, y: this.posY }, Direction.south, pieces);
+        this.checkNextPiece({ x: this.posX, y: this.posY }, Direction.east, pieces);
+        this.checkNextPiece({ x: this.posX, y: this.posY }, Direction.west, pieces);
     }
 }

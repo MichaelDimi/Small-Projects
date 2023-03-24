@@ -94,3 +94,23 @@ body {
     background-color: #A391FF;
     pointer-events: none;
 }
+.control {
+    position: absolute;
+    width: 12.5%;
+    height: 12.5%;
+    pointer-events: none;
+    opacity: 40%;
+}
+.control::after {
+    content: "";
+    position: absolute;
+    width: 90%;
+    height: 90%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    /* background-color: red; */
+    /* opacity: 20%; */
+    background-color: #ff5d5d;
+    pointer-events: none;
+}
